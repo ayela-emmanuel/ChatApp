@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2>USERNAME: <span id="DisplayName"></span></h2>
+    <div style="background:red; color:white;">
+        Frist Auth its important
+    </div>
+    <h2>AUTH</h2>
+    <section>
+        <input type="text" id="userToken" />
+        <button onclick="SetUsername()">Auth</button>
+    </section>
+
+
+    <h2>CREATE ROOM</h2>
+    <div style="background:red; color:white;">
+        Create or Join an Existing Room
+    </div>
+    <section>
+        <input type="text" id="CreateRoom" />
+        <button onclick="CreateRoom()">Create</button>
+        <button onclick="JoinRoom()">Join</button>
+    </section>
+
+
+
+    <h2>CHAT</h2>
+    <div style="background:red; color:white;">
+        Then Chat
+    </div>
+    <section id="chatHistory">
+    </section>
+    <section>
+        <input type="text" id="message" />
+        <button onclick="SendMessage()">send</button>
+    </section>
+
+
+    <style>
+        *{
+            border: solid 2px grey;
+            border-radius: 5px;
+            margin: 8px;
+            padding:5px;
+            font-family: sans-serif;
+        }
+    </style>
+    <script src="signalr.js"></script>
+    <script src="chatSystem.js"></script>
+    <script>
+        var displayName = "";
+        var DisplayName = document.getElementById("DisplayName")
+        var roomName = document.getElementById("CreateRoom")
+        var userToken = document.getElementById("userToken")
+        var message = document.getElementById("message")
+        var chatHistory = document.getElementById("chatHistory")
+        function SetUsername() {
+            auth(userToken.value)
+            DisplayName.innerHTML = userToken.value
+            displayName = userToken.value
+        }
+
+        function CreateRoom() {
+            create(roomName.value)
+        }
+        function JoinRoom() {
+            join(roomName.value)
+        }
+        function SendMessage() {
+            send(message.value)
+            addMessage({
+                "message": message.value,
+                "userName": displayName,
+                "room": "",
+                "sentAt": new Date()
+            }, true)
+        }
+        function addMessage(data, fromMe = false) {
+
+            chatHistory.innerHTML += `<div>From: ${data.userName}<br/>Message: ${data.message}<br/>${data.sentAt}</div>`
+
+        }
+    </script>
+
+</body>
+</html>
